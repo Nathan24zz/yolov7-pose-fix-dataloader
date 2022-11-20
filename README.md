@@ -5,14 +5,17 @@ Pose estimation implimentation is based on [YOLO-Pose](https://arxiv.org/abs/220
 
 ## Dataset preparison
 
-[[Keypoints Labels of MS COCO 2017]](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/coco2017labels-keypoints.zip)
+[[Keypoints Labels of nimbro in COCO format]](https://www.ais.uni-bonn.de/~hfarazi/RC2021/hrp.zip)
+``` shell
+python coco2yolo.py -i '/mnt/d/Reza/Dokumen/datasets/robot_pose/robot_keypoints_train_fixed.json' -s '/mnt/d/Reza/Dokumen/datasets/robot_pose/images/' -t "yolo_robot_pose" -n "train"
+```
 
 ## Training
 
 [yolov7-w6-person.pt](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7-w6-person.pt)
 
 ``` shell
-python -m torch.distributed.launch --nproc_per_node 8 --master_port 9527 train.py --data data/coco_kpts.yaml --cfg cfg/yolov7-w6-pose.yaml --weights weights/yolov7-w6-person.pt --batch-size 128 --img 960 --kpt-label --sync-bn --device 0,1,2,3,4,5,6,7 --name yolov7-w6-pose --hyp data/hyp.pose.yaml
+python train.py --data data/robot_kpts.yaml --cfg cfg/yolov7-w6-robot-pose.yaml --weights weights/yolov7-w6-pose.pt --batch-size 2 --kpt-label --device 0 --name yolov7-w6-pose --hyp data/hyp.pose.yaml
 ```
 
 ## Deploy
