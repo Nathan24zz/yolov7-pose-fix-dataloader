@@ -86,6 +86,7 @@ if __name__ == '__main__':
     with open(os.path.join(target_path, dataset_name+".txt"), 'w') as f1:
         for image in tqdm(data['images']):
             file_name = image['file_name']
+            file_name_no_ext = file_name.split('.')[0]
             image_id = image['id']
 
             src = os.path.join(source_images_path, file_name)
@@ -104,7 +105,7 @@ if __name__ == '__main__':
                 result = transform_anotation(anotation, [width, height])
                 transform_results.append(result)
             
-            with open(os.path.join(target_anotation_path, format(image_id, '04d')+".txt"), 'w') as f2:
+            with open(os.path.join(target_anotation_path, file_name_no_ext+".txt"), 'w') as f2:
                 for line in transform_results:
                     line = ' '.join(map(str, line))
                     f2.write(f"{line}\n")
