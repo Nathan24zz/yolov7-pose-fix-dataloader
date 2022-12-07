@@ -35,7 +35,7 @@ for orientation in ExifTags.TAGS.keys():
     if ExifTags.TAGS[orientation] == 'Orientation':
         break
 
-NKPT = 12
+NKPT = 11
 
 
 def get_hash(files):
@@ -992,18 +992,18 @@ def random_perspective(img, targets=(), segments=(), degrees=10, translate=.1, s
             new[:, [0, 2]] = new[:, [0, 2]].clip(0, width)
             new[:, [1, 3]] = new[:, [1, 3]].clip(0, height)
             if kpt_label:
-                xy_kpts = np.ones((n * (nkpt//2), 3))
-                xy_kpts[:, :2] = targets[:,5:].reshape(n*(nkpt//2), 2)  #num_kpt is NOT hardcoded to 17
+                xy_kpts = np.ones((n * nkpt, 3))
+                xy_kpts[:, :2] = targets[:,5:].reshape(n*nkpt, 2)  #num_kpt is NOT hardcoded to 17
                 xy_kpts = xy_kpts @ M.T # transform
-                xy_kpts = (xy_kpts[:, :2] / xy_kpts[:, 2:3] if perspective else xy_kpts[:, :2]).reshape(n, (nkpt//2)*2)  # perspective rescale or affine
+                xy_kpts = (xy_kpts[:, :2] / xy_kpts[:, 2:3] if perspective else xy_kpts[:, :2]).reshape(n, nkpt*2)  # perspective rescale or affine
                 xy_kpts[targets[:,5:]==0] = 0
-                x_kpts = xy_kpts[:, list(range(0,(nkpt//2)*2,2))]
-                y_kpts = xy_kpts[:, list(range(1,(nkpt//2)*2,2))]
+                x_kpts = xy_kpts[:, list(range(0,nkpt*2,2))]
+                y_kpts = xy_kpts[:, list(range(1,nkpt*2,2))]
 
                 x_kpts[np.logical_or.reduce((x_kpts < 0, x_kpts > width, y_kpts < 0, y_kpts > height))] = 0
                 y_kpts[np.logical_or.reduce((x_kpts < 0, x_kpts > width, y_kpts < 0, y_kpts > height))] = 0
-                xy_kpts[:, list(range(0, (nkpt//2)*2, 2))] = x_kpts
-                xy_kpts[:, list(range(1, (nkpt//2)*2, 2))] = y_kpts
+                xy_kpts[:, list(range(0, nkpt*2, 2))] = x_kpts
+                xy_kpts[:, list(range(1, nkpt*2, 2))] = y_kpts
 
         # filter candidates
         i = box_candidates(box1=targets[:, 1:5].T * s, box2=new.T, area_thr=0.01 if use_segments else 0.10)
