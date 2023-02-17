@@ -37,7 +37,10 @@ def keypoint_normalize(keypoints, img_size):
     width,height = img_size
     for i in range(0, len(keypoints), 3):
         x,y,v = keypoints[i:i+3]
-        kpts = kpts + ["{:.6f}".format(x/width),"{:.6f}".format(y/height), "{:.6f}".format(2)]
+        if v == 0:
+            kpts = kpts + ["{:.6f}".format(x/width),"{:.6f}".format(y/height), "{:.6f}".format(v)]
+        else:
+            kpts = kpts + ["{:.6f}".format(x/width),"{:.6f}".format(y/height), "{:.6f}".format(2)]
     return kpts
 
 def transform_anotation(anotation, img_size):
